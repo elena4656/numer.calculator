@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовый код</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 20px;
+            text-align: center;
+        }
+        .calculator {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Расчёт Финансового Кода</h1>
+    <div class="calculator">
+        <label for="dob">Введите вашу дату рождения:</label><br>
+        <input type="text" id="dob" placeholder="дд.мм.гггг">
+        <br>
+        <button onclick="calculateFinancialCode()">Рассчитать</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateFinancialCode() {
+            const dobInput = document.getElementById("dob").value;
+            const resultDiv = document.getElementById("result");
+
+            // Проверка формата ввода
+            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(dobInput)) {
+                resultDiv.innerHTML = "Пожалуйста, введите дату в формате ДД.ММ.ГГГГ.";
+                return;
+            }
+
+            // Извлечение дня, месяца и года
+            const [day, month, year] = dobInput.split(".").map(Number);
+
+            // Расчёт финансового кода
+            const daySum = sumDigits(day);
+            const monthSum = sumDigits(month);
+            const yearSum = sumDigits(year);
+            const totalSum = sumDigits(daySum + monthSum + yearSum);
+
+            const financialCode = `${daySum}${monthSum}${yearSum}${totalSum}`;
+
+            // Отображение результата
+            resultDiv.innerHTML = `
+                <p><strong>Ваш Финансовый Код:</strong> ${financialCode}</p>
+                <p>Число рождения: ${daySum}</p>
+                <p>Месяц рождения: ${monthSum}</p>
+                <p>Год рождения: ${yearSum}</p>
+                <p>Сумма всех чисел: ${totalSum}</p>
+            `;
+        }
+
+        function sumDigits(num) {
+            let sum = 0;
+            while (num > 0) {
+                sum += num % 10;
+                num = Math.floor(num / 10);
+            }
+            return sum > 9 ? sumDigits(sum) : sum; // Приведение к однозначному числу
+        }
+    </script>
+</body>
+</html>
